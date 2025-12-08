@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>网页解析器</h1>
+      <h1>Page Parser</h1>
 
       <div class="info-section">
         <div class="info-item">
@@ -22,6 +22,10 @@
       </div>
 
       <div class="actions">
+        <button id="reparse-btn" class="btn btn-secondary" disabled>
+          <span class="btn-icon">🔄</span>
+          重新解析
+        </button>
         <button id="send-btn" class="btn btn-primary" disabled>
           <span class="btn-icon">📤</span>
           发送到接口
@@ -36,6 +40,10 @@
         </button>
       </div>
 
+      <div class="status-section">
+        <div id="status-message" class="status-message"></div>
+      </div>
+
       <div class="preview-section">
         <h3>解析预览</h3>
         <div id="preview-content" class="preview-box">
@@ -43,9 +51,7 @@
         </div>
       </div>
 
-      <div class="status-section">
-        <div id="status-message" class="status-message"></div>
-      </div>
+      
     </div>
 
     <script type="module" src="popup.js"></script>

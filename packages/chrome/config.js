@@ -22,6 +22,11 @@ function bindEvents() {
   document.getElementById("delete-btn").addEventListener("click", handleDelete);
   document.getElementById("cancel-btn").addEventListener("click", handleCancel);
 
+  const exportSingleBtn = document.getElementById("export-single-btn");
+  if (exportSingleBtn) {
+    exportSingleBtn.addEventListener("click", handleExportSingleConfig);
+  }
+
   const exportBtn = document.getElementById("export-configs-btn");
   if (exportBtn) {
     exportBtn.addEventListener("click", handleExportConfigs);
@@ -312,7 +317,7 @@ function handleExportConfigs() {
   URL.revokeObjectURL(url);
 }
 
-// 从 JSON 文件导入配置（覆盖当前全部配置）
+// 从 JSON 文件导入配置（合并到现有配置中，仅在域名相同时覆盖）
 function handleImportConfigs(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
@@ -338,11 +343,15 @@ function handleImportConfigs(event) {
         }
       });
 
-      allConfigs = parsed;
+      // 合并到现有配置：只覆盖导入文件中出现的域名，其它域名保持不变
+      Object.entries(parsed).forEach(([domain, cfg]) => {
+        allConfigs[domain] = cfg;
+      });
+
       chrome.storage.local.set({ configs: allConfigs }, () => {
         renderConfigList();
         handleCancel();
-        alert("配置导入成功（已覆盖原有配置）");
+        alert("配置导入成功（已合并到现有配置，同名域名已覆盖）");
       });
     } catch (err) {
       console.error("导入配置失败", err);
@@ -354,4 +363,37 @@ function handleImportConfigs(event) {
   };
 
   reader.readAsText(file, "utf-8");
+}
+
+// 导出当前选中的单个配置（导出结构与批量导出一致，仅包含一个域名）
+function handleExportSingleConfig() {
+  const domainInput = document.getElementById("domain-input");
+  const domainFromInput = domainInput ? domainInput.value.trim() : "";
+  const domain = currentDomain || domainFromInput;
+
+  if (!domain) {
+    alert("请先在右侧选择一个配置或输入域名");
+    return;
+  }
+
+  const config = allConfigs[domain];
+  if (!config) {
+    alert("当前域名还没有已保存的配置，请先保存一次再导出");
+    return;
+  }
+
+  // 导出结构保持为 { [domain]: config }，与批量导出根结构一致
+  const dataToExport = { [domain]: config };
+  const dataStr = JSON.stringify(dataToExport, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `page-parser-config-${domain}.json`;
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

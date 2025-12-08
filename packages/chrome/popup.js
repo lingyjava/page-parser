@@ -1,6 +1,8 @@
 let currentUrl = "";
 let currentDomain = "";
 let parsedData = null;
+let lastParseTime = 0;
+let isParsing = false;
 
 // 初始化
 document.addEventListener("DOMContentLoaded", async () => {
@@ -57,26 +59,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    // 检查是否是支持的域名（目前仅支持 www.bloomberg.com）
-    const supportedDomain = "www.bloomberg.com";
-    if (currentDomain !== supportedDomain) {
-      document.getElementById("current-url").textContent = currentDomain;
-      document.getElementById("parser-status").textContent = "不支持此网站";
-      document.getElementById("parser-status").style.color = "#dc3545";
-      showStatus(
-        `当前插件仅支持 ${supportedDomain}，后续将扩展更多网站`,
-        "error"
-      );
-      disableButtons();
-      return;
-    }
-
     document.getElementById("current-url").textContent = currentDomain;
 
     // 检查是否有配置的解析规则
     await checkParserConfig();
 
     // 绑定事件
+    document
+      .getElementById("reparse-btn")
+      .addEventListener("click", parseCurrentPage);
     document.getElementById("send-btn").addEventListener("click", handleSend);
     document
       .getElementById("save-json-btn")
@@ -121,6 +112,23 @@ async function checkParserConfig() {
 
 // 解析当前页面
 async function parseCurrentPage() {
+  const now = Date.now();
+
+  // 如果正在解析中，直接提示
+  if (isParsing) {
+    showStatus("正在解析中，请稍候...", "info");
+    return;
+  }
+
+  // 限制频率：3 秒内最多执行一次
+  if (now - lastParseTime < 3000) {
+    showStatus("操作过于频繁，请稍后再试", "error");
+    return;
+  }
+
+  lastParseTime = now;
+  isParsing = true;
+
   try {
     showStatus("正在解析页面...", "info");
 
@@ -181,6 +189,8 @@ async function parseCurrentPage() {
     console.error("解析错误:", error);
     showStatus("解析出错: " + error.message, "error");
     disableButtons();
+  } finally {
+    isParsing = false;
   }
 }
 
@@ -191,10 +201,18 @@ async function handleSend() {
     return;
   }
 
+  const sendBtn = document.getElementById("send-btn");
+  const originalBtnHtml = sendBtn ? sendBtn.innerHTML : "";
+
   try {
     showStatus("正在发送数据...", "info");
 
-    const response = await fetch("http://localhost:8080/add", {
+    if (sendBtn) {
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = `<span class="btn-icon">⏳</span> 发送中...`;
+    }
+
+    const response = await fetch("http://localhost:8092/newshub/api/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -205,11 +223,23 @@ async function handleSend() {
     if (response.ok) {
       showStatus("发送成功！", "success");
     } else {
-      showStatus("发送失败: " + response.statusText, "error");
+      let errorText = "";
+      try {
+        errorText = await response.text();
+      } catch (e) {
+        // ignore
+      }
+      const detail = errorText ? ` ${response.status} ${response.statusText} - ${errorText}` : ` ${response.status} ${response.statusText}`;
+      showStatus("发送失败:" + detail, "error");
     }
   } catch (error) {
     console.error("发送错误:", error);
     showStatus("发送失败: " + error.message, "error");
+  } finally {
+    if (sendBtn) {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = originalBtnHtml;
+    }
   }
 }
 
@@ -258,22 +288,24 @@ function showStatus(message, type = "info") {
   statusElement.textContent = message;
   statusElement.className = `status-message ${type}`;
 
-  if (type === "success") {
-    setTimeout(() => {
-      statusElement.textContent = "";
-      statusElement.className = "status-message";
-    }, 3000);
-  }
+  // if (type === "success") {
+  //   setTimeout(() => {
+  //     statusElement.textContent = "";
+  //     statusElement.className = "status-message";
+  //   }, 3000);
+  // }
 }
 
 // 启用按钮
 function enableButtons() {
+  document.getElementById("reparse-btn").disabled = false;
   document.getElementById("send-btn").disabled = false;
   document.getElementById("save-json-btn").disabled = false;
 }
 
 // 禁用按钮
 function disableButtons() {
+  document.getElementById("reparse-btn").disabled = true;
   document.getElementById("send-btn").disabled = true;
   document.getElementById("save-json-btn").disabled = true;
 }
