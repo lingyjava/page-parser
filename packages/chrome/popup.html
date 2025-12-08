@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Parser</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>网页解析器</h1>
+
+      <div class="info-section">
+        <div class="info-item">
+          <span class="label">当前网站：</span>
+          <span id="current-url" class="value">加载中...</span>
+        </div>
+        <div class="info-item">
+          <span class="label">解析规则：</span>
+          <span id="parser-status" class="value">未配置</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="send-btn" class="btn btn-primary" disabled>
+          <span class="btn-icon">📤</span>
+          发送到接口
+        </button>
+        <button id="save-json-btn" class="btn btn-secondary" disabled>
+          <span class="btn-icon">💾</span>
+          保存为JSON
+        </button>
+        <button id="config-btn" class="btn btn-info">
+          <span class="btn-icon">⚙️</span>
+          配置规则
+        </button>
+      </div>
+
+      <div class="preview-section">
+        <h3>解析预览</h3>
+        <div id="preview-content" class="preview-box">
+          点击按钮解析当前页面...
+        </div>
+      </div>
+
+      <div class="status-section">
+        <div id="status-message" class="status-message"></div>
+      </div>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

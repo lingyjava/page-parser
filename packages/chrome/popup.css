@@ -1,0 +1,201 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 400px;
+  min-height: 500px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+.container {
+  background: white;
+  padding: 20px;
+  height: 100%;
+}
+
+h1 {
+  font-size: 24px;
+  color: #667eea;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.info-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  color: #666;
+  font-weight: 500;
+}
+
+.value {
+  color: #333;
+  font-weight: 600;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
+}
+
+.btn-info {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+.btn-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+}
+
+.preview-section {
+  margin-bottom: 15px;
+}
+
+.preview-box {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.preview-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: "Courier New", monospace;
+}
+
+.status-section {
+  min-height: 30px;
+}
+
+.status-message {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.status-message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-message.info {
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+/* 滚动条样式 */
+.preview-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.preview-box::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.preview-box::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.preview-box::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
