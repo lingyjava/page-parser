@@ -1,0 +1,14 @@
+{
+  "www.bloomberg.com": {
+    "name": "Latest News",
+    "selectors": {
+      "aiContent": "#ai-summary-content > div > ul > li",
+      "author": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.gridLayout_centerContent__XTM8S > div > div.BasicContent_content__ZLDUC > div.BasicContent_bylineSpeech__4_VGX > div.BasicByline_byline__VTyoS.BasicContent_bylineSpeech__4_VGX > div.ArticleByline_articleByline__cOL5d > div > div > font > font > font > a",
+      "content": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.gridLayout_centerContent__XTM8S > div > div.BasicContent_content__ZLDUC > div.body-content > p",
+      "releaseTime": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.gridLayout_centerContent__XTM8S > div > div.BasicContent_content__ZLDUC > div.BasicContent_bylineSpeech__4_VGX > div.BasicByline_byline__VTyoS.BasicContent_bylineSpeech__4_VGX > div.BasicByline_timestamp__cSkw_ > div > time",
+      "subTag": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.ArticleEyebrow_eyebrow__5ok6_.BasicHeader_sectionIdentifier__9Yy2a > div.ArticleEyebrow_subsectionTitle__eiAtl > font > font > font",
+      "tag": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.ArticleEyebrow_eyebrow__5ok6_.BasicHeader_sectionIdentifier__9Yy2a > div > a > font > font > font",
+      "title": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.gridLayout_topContent__zu2nl > header > h1 > font > font > font"
+    }
+  }
+}
