@@ -313,6 +313,11 @@ h3 {
   border-left: 4px solid #667eea;
 }
 
+/* 多个帮助/设置块之间增加间距 */
+.help-section + .help-section {
+  margin-top: 20px;
+}
+
 .help-section ul {
   list-style: none;
   padding-left: 0;

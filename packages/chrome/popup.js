@@ -201,6 +201,16 @@ async function handleSend() {
     return;
   }
 
+  // 从存储中读取全局设置（发送接口地址），没有配置则使用默认值
+  const settings = await new Promise((resolve) => {
+    chrome.storage.local.get(["settings"], (result) => {
+      resolve(result.settings || {});
+    });
+  });
+
+  const apiEndpoint =
+    settings.apiEndpoint || "http://localhost:8080/newshub/api/add";
+
   const sendBtn = document.getElementById("send-btn");
   const originalBtnHtml = sendBtn ? sendBtn.innerHTML : "";
 
@@ -212,7 +222,7 @@ async function handleSend() {
       sendBtn.innerHTML = `<span class="btn-icon">⏳</span> 发送中...`;
     }
 
-    const response = await fetch("http://localhost:8092/newshub/api/add", {
+    const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

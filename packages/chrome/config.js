@@ -1,10 +1,14 @@
 let allConfigs = {};
 let currentDomain = null;
 let isNewConfig = false;
+let globalSettings = {
+  apiEndpoint: "http://localhost:8080/newshub/api/add",
+};
 
 // 初始化
 document.addEventListener("DOMContentLoaded", () => {
   loadAllConfigs();
+  loadGlobalSettings();
   bindEvents();
 });
 
@@ -46,6 +50,27 @@ function bindEvents() {
   if (importInput) {
     importInput.addEventListener("change", handleImportConfigs);
   }
+
+  const saveSettingsBtn = document.getElementById("save-settings-btn");
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener("click", handleSaveSettings);
+  }
+}
+
+// 加载全局设置
+function loadGlobalSettings() {
+  chrome.storage.local.get(["settings"], (result) => {
+    const stored = result.settings || {};
+    globalSettings = {
+      apiEndpoint: globalSettings.apiEndpoint,
+      ...stored,
+    };
+
+    const apiInput = document.getElementById("api-endpoint-input");
+    if (apiInput) {
+      apiInput.value = globalSettings.apiEndpoint || "";
+    }
+  });
 }
 
 // 加载所有配置
@@ -396,4 +421,21 @@ function handleExportSingleConfig() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// 保存全局设置（发送接口地址等）
+function handleSaveSettings() {
+  const apiInput = document.getElementById("api-endpoint-input");
+  const apiEndpoint = apiInput ? apiInput.value.trim() : "";
+
+  if (!apiEndpoint) {
+    alert("请输入发送接口地址");
+    return;
+  }
+
+  globalSettings.apiEndpoint = apiEndpoint;
+
+  chrome.storage.local.set({ settings: globalSettings }, () => {
+    alert("全局设置已保存！");
+  });
 }
