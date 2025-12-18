@@ -209,7 +209,7 @@ async function handleSend() {
   });
 
   const apiEndpoint =
-    settings.apiEndpoint || "http://localhost:8080/newshub/api/add";
+    settings.apiEndpoint || "http://localhost:8080/newshub/add";
 
   const sendBtn = document.getElementById("send-btn");
   const originalBtnHtml = sendBtn ? sendBtn.innerHTML : "";

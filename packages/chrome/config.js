@@ -2,7 +2,7 @@ let allConfigs = {};
 let currentDomain = null;
 let isNewConfig = false;
 let globalSettings = {
-  apiEndpoint: "http://localhost:8080/newshub/api/add",
+  apiEndpoint: "http://localhost:8080/newshub/add",
 };
 
 // 初始化
