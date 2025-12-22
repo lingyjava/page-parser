@@ -2,7 +2,8 @@ let allConfigs = {};
 let currentDomain = null;
 let isNewConfig = false;
 let globalSettings = {
-  apiEndpoint: "http://localhost:8080/newshub/add",
+  apiEndpoint: "http://localhost:8080/api/add",
+  existsEndpoint: "http://localhost:8080/api/exists",
 };
 
 // 初始化
@@ -62,13 +63,18 @@ function loadGlobalSettings() {
   chrome.storage.local.get(["settings"], (result) => {
     const stored = result.settings || {};
     globalSettings = {
-      apiEndpoint: globalSettings.apiEndpoint,
+      ...globalSettings,
       ...stored,
     };
 
     const apiInput = document.getElementById("api-endpoint-input");
     if (apiInput) {
       apiInput.value = globalSettings.apiEndpoint || "";
+    }
+
+    const existsInput = document.getElementById("exists-endpoint-input");
+    if (existsInput) {
+      existsInput.value = globalSettings.existsEndpoint || "";
     }
   });
 }
@@ -426,7 +432,10 @@ function handleExportSingleConfig() {
 // 保存全局设置（发送接口地址等）
 function handleSaveSettings() {
   const apiInput = document.getElementById("api-endpoint-input");
+  const existsInput = document.getElementById("exists-endpoint-input");
+
   const apiEndpoint = apiInput ? apiInput.value.trim() : "";
+  const existsEndpoint = existsInput ? existsInput.value.trim() : "";
 
   if (!apiEndpoint) {
     alert("请输入发送接口地址");
@@ -434,6 +443,7 @@ function handleSaveSettings() {
   }
 
   globalSettings.apiEndpoint = apiEndpoint;
+  globalSettings.existsEndpoint = existsEndpoint;
 
   chrome.storage.local.set({ settings: globalSettings }, () => {
     alert("全局设置已保存！");

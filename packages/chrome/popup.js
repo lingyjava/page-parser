@@ -1,4 +1,5 @@
 let currentUrl = "";
+let currentPageUrlWithoutQuery = "";
 let currentDomain = "";
 let parsedData = null;
 let lastParseTime = 0;
@@ -23,6 +24,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("current-url").textContent = "不支持此页面";
       document.getElementById("parser-status").textContent = "无法解析";
       document.getElementById("parser-status").style.color = "#dc3545";
+      const existsStatusElement = document.getElementById("exists-status");
+      if (existsStatusElement) {
+        existsStatusElement.textContent = "-";
+        existsStatusElement.style.color = "#666";
+      }
       showStatus("当前页面不支持解析（可能是浏览器内部页面）", "error");
       disableButtons();
       return;
@@ -53,6 +59,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("current-url").textContent = currentDomain;
         document.getElementById("parser-status").textContent = "无法解析";
         document.getElementById("parser-status").style.color = "#dc3545";
+        const existsStatusElement = document.getElementById("exists-status");
+        if (existsStatusElement) {
+          existsStatusElement.textContent = "-";
+          existsStatusElement.style.color = "#666";
+        }
         showStatus("无法解析当前页面URL", "error");
         disableButtons();
         return;
@@ -60,9 +71,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     document.getElementById("current-url").textContent = currentDomain;
+    // 记录去掉查询参数后的完整网址（仅用于请求参数，不再展示）
+    currentPageUrlWithoutQuery = getUrlWithoutQuery(currentUrl);
 
     // 检查是否有配置的解析规则
     await checkParserConfig();
+
+    // 检查当前网址是否已存在
+    checkExistsStatus();
 
     // 绑定事件
     document
@@ -131,6 +147,8 @@ async function parseCurrentPage() {
 
   try {
     showStatus("正在解析页面...", "info");
+    // 每次解析时也检查一次“是否已存在”状态
+    // checkExistsStatus();
 
     // 向content script发送解析请求
     const [tab] = await chrome.tabs.query({
@@ -194,6 +212,19 @@ async function parseCurrentPage() {
   }
 }
 
+// 获取去掉查询参数后的 URL（保留协议、域名和路径）
+function getUrlWithoutQuery(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    u.search = "";
+    return u.toString();
+  } catch (e) {
+    const index = url.indexOf("?");
+    return index >= 0 ? url.substring(0, index) : url;
+  }
+}
+
 // 发送到接口
 async function handleSend() {
   if (!parsedData) {
@@ -209,7 +240,7 @@ async function handleSend() {
   });
 
   const apiEndpoint =
-    settings.apiEndpoint || "http://localhost:8080/newshub/add";
+    settings.apiEndpoint;
 
   const sendBtn = document.getElementById("send-btn");
   const originalBtnHtml = sendBtn ? sendBtn.innerHTML : "";
@@ -232,6 +263,10 @@ async function handleSend() {
 
     if (response.ok) {
       showStatus("发送成功！", "success");
+      // 发送成功后，稍作延迟再更新“是否已存在”的状态
+      setTimeout(() => {
+        checkExistsStatus();
+      }, 300);
     } else {
       let errorText = "";
       try {
@@ -330,4 +365,80 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// 调用“获取接口地址”检查当前网址是否已存在
+async function checkExistsStatus() {
+  const existsElement = document.getElementById("exists-status");
+  if (!existsElement) return;
+
+  // 从存储中读取全局设置
+  const settings = await new Promise((resolve) => {
+    chrome.storage.local.get(["settings"], (result) => {
+      resolve(result.settings || {});
+    });
+  });
+
+  const existsEndpoint = settings.existsEndpoint;
+  if (!existsEndpoint) {
+    existsElement.textContent = "未配置";
+    existsElement.style.color = "#666";
+    return;
+  }
+
+  const baseUrl = currentPageUrlWithoutQuery || getUrlWithoutQuery(currentUrl);
+  if (!baseUrl) {
+    existsElement.textContent = "无效网址";
+    existsElement.style.color = "#dc3545";
+    return;
+  }
+
+  const urlParam = encodeURIComponent(baseUrl);
+  const requestUrl = existsEndpoint.includes("?")
+    ? `${existsEndpoint}&url=${urlParam}`
+    : `${existsEndpoint}?url=${urlParam}`;
+
+  existsElement.textContent = "检查中...";
+  existsElement.style.color = "#666";
+
+  try {
+    const response = await fetch(requestUrl, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      existsElement.textContent = "检查失败";
+      existsElement.style.color = "#dc3545";
+      showStatus("检查是否已存在失败: " + response.status, "error");
+      return;
+    }
+
+    let result;
+    try {
+      result = await response.json();
+    } catch (e) {
+      existsElement.textContent = "检查失败";
+      existsElement.style.color = "#dc3545";
+      showStatus("检查是否已存在失败: 返回不是合法 JSON", "error");
+      return;
+    }
+
+    const exists =
+      result && typeof result === "object" && result.code === 200
+        ? result.data === true
+        : false;
+
+    if (exists) {
+      existsElement.textContent = "已存在";
+      existsElement.style.color = "#28a745";
+    } else {
+      existsElement.textContent = "不存在";
+      existsElement.style.color = "#dc3545";
+    }
+  } catch (error) {
+    console.error("检查是否已存在出错:", error);
+    existsElement.textContent = "检查失败";
+    existsElement.style.color = "#dc3545";
+    showStatus("检查是否已存在出错: " + error.message, "error");
+  }
 }

@@ -122,9 +122,19 @@
           <input
             type="text"
             id="api-endpoint-input"
-            placeholder="例如: http://localhost:8080/newshub/add"
+            placeholder="例如: http://localhost:8080/api/add"
           />
           <small>用于 Popup 中“发送到接口”按钮的目标地址</small>
+        </div>
+        </br>
+        <div class="form-group">
+          <label for="exists-endpoint-input">查询接口地址</label>
+          <input
+            type="text"
+            id="exists-endpoint-input"
+            placeholder="例如: http://localhost:8080/api/exists"
+          />
+          <small>用于 Popup 中“检查是否已存在”等操作的接口地址</small>
         </div>
         <div class="form-actions">
           <button type="button" id="save-settings-btn" class="btn btn-success">
