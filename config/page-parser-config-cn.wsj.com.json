@@ -1,0 +1,12 @@
+{
+  "cn.wsj.com": {
+    "name": "Articles",
+    "selectors": {
+      "authors": "#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > div.e17u6o7r0.css-1rqaeba > div > div > div > div > div.css-159gcdb > div > div,#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > div.e17u6o7r0.css-1rqaeba > div > div > div > div > div.css-10mmni2 > div > div > a > span > span",
+      "content": "#__next > div > main > div.article-container.css-pm9060.exzsrok1 > div.article-header.css-sg97m7.exzsrok3 > div > div > div.crawler.css-1skj0ht-Box.e1vnmyci0 > h2,#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > section > p,#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > section > div > p,#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > section > p,#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > section > div > h3",
+      "publishTime": "#__next > div > main > div.article-container.css-pm9060.exzsrok1 > article > div > div.crawler.css-j6808u.e4jtj9912 > div.e17u6o7r0.css-1rqaeba > div > div > div > div > div.css-11paagg > div > p",
+      "tag": "#__next > div > main > div.article-container.css-pm9060.exzsrok1 > div.article-header.css-sg97m7.exzsrok3 > div > div > div.css-r3j1s-Box.e1vnmyci0 > nav > ol > li > a > span > span > span",
+      "title": "#__next > div > main > div.article-container.css-pm9060.exzsrok1 > div.article-header.css-sg97m7.exzsrok3 > div > div > div.crawler.css-1skj0ht-Box.e1vnmyci0 > div > h1"
+    }
+  }
+}

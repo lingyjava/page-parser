@@ -1,6 +1,6 @@
 {
   "www.bloomberg.com": {
-    "name": "articles",
+    "name": "Articles",
     "selectors": {
       "aiContent": "#ai-summary-content > div > ul > li",
       "authors": "#__next > div > div.media-ui-LeaderboardAd_parallaxWrapper-JMVgdxR--aU- > main > div > article > div.gridLayout_centerContent__XTM8S > div > div.BasicContent_content__ZLDUC > div.BasicContent_bylineSpeech__4_VGX > div.BasicByline_byline__VTyoS.BasicContent_bylineSpeech__4_VGX > div.ArticleByline_articleByline__cOL5d > div > div > font > font > font > a",
